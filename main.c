@@ -4,7 +4,7 @@
 //
 //  Created by u on 2019/4/19.
 //  Copyright © 2019年 u. All rights reserved.
-//
+//	注释有test表示该段代码或者变量没有完善或者有问题
 
 #include <stdio.h>
 #include <malloc.h>
@@ -58,7 +58,7 @@ int is_bg(void);//后台程序
 void tail(void);//tail命令用途是依照要求将指定的文件的最后部分输出到标准设备
 void tail_f(void);//tail -f用来实现后台程序
 void quit(void);
-//void ps(void);//test
+//void jobs(void);//test
 
 void welcome()
 {
@@ -73,11 +73,12 @@ void welcome()
 		perror("uname");
 		exit(1);	
 	}
+	printf("\n");
     printf("Welcome to %s\n",uts.version);
     printf("\n");
     printf("*************************************************************\n");
     printf("**Welcome to Tanpan Y's shell                              **\n");
-    printf("**Please input \"help\" to show what commands can you use  **\n");
+    printf("**Please input \"\033[1mhelp\033[m\" to show what commands can you use  **\n");
     printf("*************************************************************\n");
     printf(" _   _      _ _        __        __         _     _ \n");
     printf("| | | | ___| | | ___   \\ \\      / /__  _ __| | __| |\n");
@@ -255,9 +256,9 @@ int deal_command()
 		quit();
 		return 1;
 	}
-	else if(strcmp(cmdArry[0], "ps") == 0)
+	else if(strcmp(cmdArry[0], "jobs") == 0)
 	{
-		//ps();
+		//jobs();
 		return 1;
 	}
 	else
@@ -558,23 +559,32 @@ void clear()
 	return;
 }
 
-void help()//用户手册还不完整
+void help()
 {
-	printf("welcome to the manual of myshell, hope it's useful for you\n");
-	printf("the following are the BUILT-IN commands supported by myshell\n");
+	printf("************************************************\n");
+	printf("welcome to the manual of myshell\n");
+	printf("the following commands supported by myshell\n");
 	printf("\n");
-	printf("NAMES      FORMATS                         DESCRIPTIONS\n");
-	printf("&:         [job_spec] &                    execute commands in background\n");
-	printf("cd:        cd [dir]						   go to a specified directory\n");
-	printf("echo:      echo [arg ...]                  print strings after echo,redirection is supported\n");
-	printf("exit:      exit                            quit the shell directly\n");
-	printf("jobs:      jobs                            check the processes running in the system\n");
-	printf("pwd:       pwd                             print the current working directory\n");
-	printf("time:      time                            show the current time in an elegant format\n");
-	printf("clear:     clear                           clear the screen\n");
-	printf("ls:        ls [dir]                        list the file names in the target directory\n");
-	printf("help:      help             			   show the manual of help/get help info of a sepcified command\n");
-	printf("quit:      exit                            quit the shell \n");
+	printf("\033[1;33mNAMES\033[m      \033[1;33mFORMATS\033[m                         \033[1;33mDESCRIPTIONS\033[m\n");
+	printf("\033[1;32m&\033[m:         [job_spec] &                    Commands in background\n");
+	printf("\033[1;32mpwd\033[m:       pwd                             Print the current working directory\n");
+	printf("\033[1;32mecho\033[m:      echo ...                        Print strings after echo\n");
+	printf("           echo ... >(>>) [FILE]           Redirection is supported\n");
+	printf("\033[1;32mls\033[m:        ls [DIR]                        List the file names in the target directory\n");
+	printf("\033[1;32mcd\033[m:        cd [DIR]						   Go to a specified directory\n");
+	printf("\033[1;32mmkdir\033[m:     mkdir [DIR]                     Create a file directory\n");
+	printf("\033[1;32mrm\033[m:        rm [FILE]                       Delete a file\n");
+	printf("\033[1;32mrmdir\033[m:     rmdir [DIR]                     Delete a file directory\n");
+	printf("\033[1;32mcat\033[m:       cat [FILE]                      Print text Output\n"); 
+	printf("           cat [FILE] >(>>) [FILE]         Redirection is supported\n");
+	printf("\033[1;32mwc\033[m:        wc [FILE]                       Statistics the number of bytes, words and rows in the specified file, and display\n");
+	printf("\033[1;32mclear\033[m:     clear                           Clear the screen\n");
+	printf("\033[1;32mhelp\033[m:      help             			   Show the manual of help/get help info of a sepcified command\n");
+	printf("\033[1;32mtail\033[m:      tail [OPTION]... [FILE]...      Print  the  last  10  lines of FILE\n");
+	printf("           -f                              Output appended data as the file grows\n");
+	printf("\033[1;32mquit\033[m:      quit                            Quit the shell \n");
+	printf("\033[1;32mjobs\033[m:      jobs                            Check the processes running in the system\n");
+	printf("************************************************\n");
 	fflush(stdout);
 }
 
@@ -728,7 +738,7 @@ void echo_redirection()
 	return;
 }
 
-void echo_pipe(int pos)//test
+void echo_pipe(int pos)//test,有问题
 {
 	//char msg[1024];
 	pid_t pid;
@@ -836,7 +846,7 @@ void quit()
 	exit(-1);
 }
 
-//~ void ps()//test
+//~ void jobs()//test
 //~ {
 	//~ read(fd[0], s, 30);
 	//~ //read(fd[0], jobsCnt, sizeof(jobsCnt));
@@ -902,7 +912,7 @@ int main(void)
 		bg = is_bg();
 		if(bg == 1)//bg = 1表示该程序为后台程序
 		{
-			run_bg();//&有时候没有换行输出，why？
+			run_bg();//&有时候没有换行输出，有bug，后台程序运行的时候
 		}
 		else
 		{
