@@ -251,7 +251,7 @@ int deal_command()
 			return 1;
 		}		
 	}
-	else if(strcmp(cmdArry[0], "exit") == 0)
+	else if(strcmp(cmdArry[0], "quit") == 0)
 	{
 		quit();
 		return 1;
@@ -529,7 +529,8 @@ void wc()
 	char buf[1024];
 	FILE* fp;
 	int len;
-	int length = 0;//总长度
+	int count = 0;
+	int length = 0;//总字节长度
 	int RowNumber = 0;//行数
 	int sizeLen = 0;//字节长度
 	if((fp = fopen(cmdArry[1], "r")) == NULL)
@@ -540,13 +541,17 @@ void wc()
 	while(fgets(buf, 1024, fp) != NULL)
 	{
 		len = strlen(buf);
-		buf[len - 1] = '\0';//去掉换行符
-		--len;
 		length += len;
+		buf[len - 1] = '\0';//去掉换行符
 		++RowNumber;
-		sizeLen += sizeof(buf);
+		char* tmp = strtok(buf, " ");
+		while(tmp != NULL)
+		{
+			tmp = strtok(NULL, " ");
+			++count;
+		}
 	}
-	printf("%d\t%d\t%d %s",sizeLen, length, RowNumber, cmdArry[1]);
+	printf("%d\t%d\t%d %s",RowNumber, count, length, cmdArry[1]);
 	printf("\n");
 	fclose(fp);
 	return;
